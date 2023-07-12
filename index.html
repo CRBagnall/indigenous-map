@@ -74,7 +74,9 @@
       map.setView(location, 10);
 
       // Simulate a click event on the map at the selected location
-      indigenous_areas.fire('click', { latlng: location });
+      indigenous_areas.eachLayer(function (layer) {
+        layer.fire('click', { latlng: location });
+      });
     });
 
 
