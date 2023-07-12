@@ -24,8 +24,11 @@
 </head>
 
 <body>
-  <div id="map"></div>
-  <script>
+  <div id="search-box">
+    <input type="text" id="search-input" placeholder="Search for a location..." />
+    <div id="map"></div>
+  </div>
+    <script>
     var mapBounds = [[-5.909, 105.416], [-50.492, 160.612]];
     var map = L.map('map',{maxBounds: mapBounds}).fitBounds(mapBounds);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -43,7 +46,7 @@
       onEachFeature: bindInteractions
     }).addTo(map);
 
-// Google Places Autocomplete control
+/* Google Places Autocomplete control
     new L.Control.GPlaceAutocomplete({
       callback: function(place) {
         var loc = place.geometry.location;
@@ -51,6 +54,30 @@
         map.setZoom(18);
       }
     }).addTo(map);
-  </script>
+*/
+
+    var input = document.getElementById('search-input');
+    var autocomplete = new google.maps.places.Autocomplete(input, {
+      types: ['geocode'],
+      componentRestrictions: { country: 'au' }
+    });
+
+    autocomplete.addListener('place_changed', function () {
+      var place = autocomplete.getPlace();
+
+      if (!place.geometry || !place.geometry.location) {
+        console.log('Place details not found.');
+        return;
+      }
+
+      var location = L.latLng(place.geometry.location.lat(), place.geometry.location.lng());
+      map.setView(location, 10);
+
+      // Simulate a click event on the map at the selected location
+      map.fireEvent('click', { latlng: location });
+    });
+
+
+    </script>
 </body>
 </html>
