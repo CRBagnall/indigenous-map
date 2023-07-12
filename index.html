@@ -42,7 +42,7 @@
       })
       layer.bindPopup(feature.properties.name)
     }
-    L.geoJSON(myAreas, {
+    var indigenous_areas = L.geoJSON(myAreas, {
       onEachFeature: bindInteractions
     }).addTo(map);
 
@@ -74,7 +74,7 @@
       map.setView(location, 10);
 
       // Simulate a click event on the map at the selected location
-      map.fireEvent('click', { latlng: location });
+      indigenous_areas.fire('click', { latlng: location });
     });
 
 
