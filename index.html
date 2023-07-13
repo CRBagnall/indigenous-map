@@ -11,12 +11,12 @@
   <link rel="stylesheet" href="css/styles.css">
 
   <!--JS Scripts-->
-  <script src="js/data.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TTvOR-BHHgXkO9O_UrbGQu9OWtsCzK4&libraries=places"></script>
+  <script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
           crossorigin=""></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TTvOR-BHHgXkO9O_UrbGQu9OWtsCzK4&libraries=places"></script>
-  <script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
+
 
 <!--Preventing mobiles modifying viewport-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
@@ -28,6 +28,35 @@
     <div id="map"></div>
   </div>
     <script>
+
+    //GEOJson data
+    var myAreas = [
+{ "type": "Feature", "properties": { "id": 1, "name": "test1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 153.599540392559902, -29.085128876625454 ], [ 152.853776543608546, -32.333064007458908 ], [ 151.113660896055535, -34.572788376841402 ], [ 148.578063809621057, -33.418670619291504 ], [ 148.478628629760891, -28.998195998863434 ], [ 153.599540392559902, -29.085128876625454 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 2, "name": "test2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 153.599540392559902, -29.085128876625454 ], [ 148.478628629760891, -28.998195998863434 ], [ 148.446830694366525, -25.312706817960503 ], [ 153.119038817450161, -25.312706817960503 ], [ 153.599540392559902, -29.085128876625454 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 3, "name": "test3" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 153.119038817450161, -25.312706817960503 ], [ 148.446830694366525, -25.312706817960503 ], [ 145.319154182219648, -21.342628960401374 ], [ 149.682455983115915, -21.198697646172466 ], [ 153.119038817450161, -25.312706817960503 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 4, "name": "test4" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 141.843958057612014, -38.593825007567759 ], [ 140.22219986612842, -36.326015983487956 ], [ 135.434151872224589, -34.118204498351254 ], [ 132.036182328163761, -31.916790709998317 ], [ 125.703602723323158, -14.102628738545635 ], [ 129.256025428477642, -14.925003469489061 ], [ 131.495596264335859, -10.633230687542165 ], [ 136.824230322067621, -12.071786580600884 ], [ 136.05196451659927, -14.701023686853398 ], [ 140.762785929956294, -16.856059936125138 ], [ 140.994465671596771, -12.222781474327457 ], [ 144.667612187177838, -10.101012693061531 ], [ 149.682455983115915, -21.198697646172466 ], [ 145.319154182219648, -21.342628960401374 ], [ 148.446830694366525, -25.312706817960503 ], [ 148.478628629760891, -28.998195998863434 ], [ 148.578063809621057, -33.418670619291504 ], [ 151.113660896055535, -34.572788376841402 ], [ 150.107202176123479, -37.13064433393977 ], [ 147.867631340265206, -38.593825007567759 ], [ 141.843958057612014, -38.593825007567759 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 5, "name": "test5" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 125.703602723323158, -14.102628738545635 ], [ 132.036182328163761, -31.916790709998317 ], [ 122.768992662543383, -33.669481207846104 ], [ 117.054225702077503, -35.387171952237431 ], [ 115.355240930047074, -34.373555391429612 ], [ 115.278014349500225, -31.654212708297617 ], [ 112.729537191454639, -25.417379336203016 ], [ 114.814654866219243, -21.234693664552335 ], [ 120.992781309966134, -19.788130803322346 ], [ 125.703602723323158, -14.102628738545635 ] ] ] } }
+]
+
+    //Functions
+    function generatePopupText(polygonName) {
+      return 'This is ' + polygonName + ' land.';
+    }
+
+    function bindInteractions(feature, layer) {
+      layer.bindPopup(generatePopupText(feature.properties.name));
+    }
+
+    function triggerPopup(latLng, geoJsonLayer) {
+      var results = leafletPip.pointInLayer(latLng, indigenous_areas);
+      var polygonName = results[0].feature.properties.name;
+      L.popup()
+        .setLatLng(latLng)
+        .setContent(generatePopupText(polygonName))
+        .openOn(map);
+    }
+
+    //Setup map
     var mapBounds = [[-5.909, 105.416], [-50.492, 160.612]];
     var map = L.map('map',{maxBounds: mapBounds}).fitBounds(mapBounds);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -35,18 +64,15 @@
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
-
-    function bindInteractions(feature, layer) {
-      layer.bindPopup(feature.properties.name)
-    }
-
     var indigenous_areas = L.geoJSON(myAreas, {
       onEachFeature: bindInteractions
     }).addTo(map);
 
+    //Testing
     var clickLatLng = L.latLng(-27.59, 151.27);
-    clickAtCoordinates(clickLatLng)
+    triggerPopup(clickLatLng, indigenous_areas)
 
+    //Autocomplete functionality
     var input = document.getElementById('search-input');
     var autocomplete = new google.maps.places.Autocomplete(input, {
       types: ['geocode'],
@@ -64,9 +90,8 @@
       var location = L.latLng(place.geometry.location.lat(), place.geometry.location.lng());
       map.setView(location, 10);
 
-      // Simulate a click event on the map at the selected location
-      clickAtCoordinates(location)
-      console.log(location)
+      // Generate a popup at the location
+      triggerPopup(location, indigenous_areas)
     });
 
 
