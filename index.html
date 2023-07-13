@@ -49,7 +49,8 @@
 
   //Constants
   const ZOOM_WHEN_LOCATED = 12;
-
+  const MIN_ZOOM = 3;
+  const MAX_ZOOM = 19;
 
   //Setup map
   var mapBounds = [[-5.909, 105.416], [-50.492, 160.612]];
@@ -62,8 +63,8 @@
     position: 'topright'
   }).addTo(map);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    minZoom: 4,
-    maxZoom: 19,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
   var indigenous_areas = L.geoJSON(myAreas, {
