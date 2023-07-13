@@ -9,14 +9,13 @@ var myAreas = [
 
 
 function clickAtCoordinates(latLng) {
-  var containerPoint = map.latLngToContainerPoint(latLng);
-  console.log(containerPoint)
-  var event = new MouseEvent('click', {
-    clientX: containerPoint.x,
-    clientY: containerPoint.y,
-    bubbles: true
-  });
-  console.log(event.clientY)
-  map.getContainer().dispatchEvent(event);
-  console.log(map.getContainer())
+  setTimeout(function () {
+    var containerPoint = map.latLngToContainerPoint(latLng);
+    var event = new MouseEvent('click', {
+      clientX: containerPoint.x,
+      clientY: containerPoint.y,
+      bubbles: true
+    });
+    map.getContainer().dispatchEvent(event);
+  }, 100); // Delay of 100 milliseconds
 }
