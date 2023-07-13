@@ -17,7 +17,7 @@
           crossorigin=""></script>
   <script src="js/data.js"></script>
   <script src="js/gplaces-autocomplete.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TTvOR-BHHgXkO9O_UrbGQu9OWtsCzK4&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TTvOR-BHHgXkO9O_UrbGQu9OWtsCzK4&libraries=places&callback=initMap"></script>
 
 <!--Preventing mobiles modifying viewport-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
@@ -36,25 +36,13 @@
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
-    function bindInteractions(feature, layer) {
-      layer.bindTooltip(feature.properties.name, {
-        permanent: true
-      })
-      layer.bindPopup(feature.properties.name)
-    }
+
     var indigenous_areas = L.geoJSON(myAreas, {
       onEachFeature: bindInteractions
     }).addTo(map);
 
-/* Google Places Autocomplete control
-    new L.Control.GPlaceAutocomplete({
-      callback: function(place) {
-        var loc = place.geometry.location;
-        map.panTo([loc.lat(), loc.lng()]);
-        map.setZoom(18);
-      }
-    }).addTo(map);
-*/
+    var clickLatLng = L.latLng(-27.59, 151.27);
+    clickAtCoordinates(clickLatLng)
 
     var input = document.getElementById('search-input');
     var autocomplete = new google.maps.places.Autocomplete(input, {
@@ -74,12 +62,7 @@
       map.setView(location, 10);
 
       // Simulate a click event on the map at the selected location
-      map.fire('click', {
-        latlng: location,
-        layerPoint: map.latLngToLayerPoint(location),
-        containerPoint: map.latLngToContainerPoint(location)
-      });
-    console.log(location)
+      clickAtCoordinates(location)
     });
 
 
