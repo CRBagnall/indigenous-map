@@ -16,5 +16,7 @@ function clickAtCoordinates(latLng) {
       bubbles: true
     });
     map.getContainer().dispatchEvent(event);
+    console.log(map.getContainer());
+    console.log(dispatchEvent(event));
 }
 
