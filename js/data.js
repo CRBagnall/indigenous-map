@@ -13,7 +13,7 @@ function clickAtCoordinates(latLng) {
     var event = new MouseEvent('click', {
       clientX: containerPoint.x,
       clientY: containerPoint.y,
-      bubbles: false
+      bubbles: true
     });
     map.getContainer().dispatchEvent(event);
 }
