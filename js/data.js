@@ -6,14 +6,17 @@ var myAreas = [
 { "type": "Feature", "properties": { "id": 5, "name": "test5" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 125.703602723323158, -14.102628738545635 ], [ 132.036182328163761, -31.916790709998317 ], [ 122.768992662543383, -33.669481207846104 ], [ 117.054225702077503, -35.387171952237431 ], [ 115.355240930047074, -34.373555391429612 ], [ 115.278014349500225, -31.654212708297617 ], [ 112.729537191454639, -25.417379336203016 ], [ 114.814654866219243, -21.234693664552335 ], [ 120.992781309966134, -19.788130803322346 ], [ 125.703602723323158, -14.102628738545635 ] ] ] } }
 ]
 
-function bindInteractions(feature, layer) {
-    layer.bindPopup(feature.properties.name)
-}
+
 
 function clickAtCoordinates(latLng) {
-  map.eachLayer(function (layer) {
-    layer.fire('click', {
-      latlng: latLng
-    });
+  var containerPoint = map.latLngToContainerPoint(latLng);
+  console.log(containerPoint)
+  var event = new MouseEvent('click', {
+    clientX: containerPoint.x,
+    clientY: containerPoint.y,
+    bubbles: true
   });
+  console.log(event.clientY)
+  map.getContainer().dispatchEvent(event);
+  console.log(map.getContainer())
 }

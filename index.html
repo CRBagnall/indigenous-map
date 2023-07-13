@@ -18,6 +18,7 @@
           crossorigin=""></script>
   <script src="js/gplaces-autocomplete.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TTvOR-BHHgXkO9O_UrbGQu9OWtsCzK4&libraries=places"></script>
+  <script src="https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js"></script>
 
 <!--Preventing mobiles modifying viewport-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
@@ -36,6 +37,10 @@
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+    function bindInteractions(feature, layer) {
+      layer.bindPopup(feature.properties.name)
+    }
 
     var indigenous_areas = L.geoJSON(myAreas, {
       onEachFeature: bindInteractions
