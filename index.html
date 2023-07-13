@@ -7,8 +7,9 @@
 <!--CSS Stylesheets-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-        crossorigin=""/>
-  <link rel="stylesheet" href="css/styles.css">
+        crossorigin="" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+  <link rel="stylesheet" href="css/styles.css" />
 
   <!--JS Scripts-->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7TTvOR-BHHgXkO9O_UrbGQu9OWtsCzK4&libraries=places"></script>
@@ -16,7 +17,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
           crossorigin=""></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
 <!--Preventing mobiles modifying viewport-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
@@ -54,12 +55,17 @@
       .openOn(map);
   }
 
+  //Constants
+  const ZOOM_WHEN_LOCATED = 12;
+
+
   //Setup map
   var mapBounds = [[-5.909, 105.416], [-50.492, 160.612]];
   var map = L.map('map',{
     maxBounds: mapBounds,
     zoomControl: false
   }).fitBounds(mapBounds);
+
   L.control.zoom({
     position: 'topright'
   }).addTo(map);
@@ -104,7 +110,7 @@
         }
 
         var location = L.latLng(place.geometry.location.lat(), place.geometry.location.lng());
-        map.setView(location, 10);
+        map.setView(location, ZOOM_WHEN_LOCATED);
 
         // Generate a popup at the location
         triggerPopup(location, indigenous_areas);
@@ -123,6 +129,16 @@
 
   // Add the search control to the map
   searchControl.addTo(map);
+  L.control.locate({
+    showPopup: false,
+    locateOptions: {
+      maxZoom:ZOOM_WHEN_LOCATED
+    }
+  }).addTo(map);
+
+  map.on('locationfound', function (e) {
+    triggerPopup(e.latlng, indigenous_areas);
+  });
 
   </script>
 </body>
